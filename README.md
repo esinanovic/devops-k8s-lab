@@ -1,2 +1,2 @@
 # devops-k8s-lab
-repository for kubernetes kind discovery lab
+Repo git pour projet kubernetes local/Azure, rédaction complète readme prochainement
