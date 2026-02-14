@@ -1,2 +1,2 @@
 # devops-k8s-lab
-repo kubernetes kind discovery lab
+repository for kubernetes kind discovery lab
