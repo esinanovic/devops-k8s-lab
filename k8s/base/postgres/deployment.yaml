@@ -1,5 +1,5 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: postgres-db
   namespace: devops-lab
@@ -8,6 +8,7 @@ spec:
   selector:
     matchLabels:
       app: postgres
+  serviceName: "postgres-service"
   template:
     metadata:
       labels:
@@ -37,9 +38,35 @@ spec:
             secretKeyRef:
               name: postgres-secret
               key: POSTGRES_DB
+
+        # Variable d'environnement pour spécifier le chemin de stockage des données de PostgreSQL
+        #C'est le branchement du pods vers l'emplacement du disque dur
+        - name: PGDATA
+          value: /var/lib/postgresql/data/pgdata
+          
         volumeMounts:
         - name: postgres-storage
           mountPath: /var/lib/postgresql/data
-      volumes:
-      - name: postgres-storage
-        emptyDir: {}
+
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "100m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+
+  #Machine a fabiruqer des volumes persistants pour stocker les données de la base de données
+  #C'est la commande pour fabriquer le disque
+  volumeClaimTemplates:
+  - metadata:
+      name: postgres-storage
+      namespace: devops-lab
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      storageClassName: standard
+      resources:
+        requests:
+          storage: 1Gi
+

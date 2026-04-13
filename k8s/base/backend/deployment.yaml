@@ -12,12 +12,33 @@ spec:
     metadata:
       labels:
         app: backend
-    spec: # <--- IL MANQUAIT CETTE LIGNE
-      containers: # <--- Doit être décalé (indenté) sous spec
-      - name: node-app
-        image: custom-backend:v1
+    spec:   
+      containers:
+      - name: node-app 
+        #name image local
+        image: backend-app:latest
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3001
+        resources:   
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "500m"
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3001  
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3001
+          initialDelaySeconds: 15
+          periodSeconds: 20
         env:
         - name: DB_USER
           valueFrom:
