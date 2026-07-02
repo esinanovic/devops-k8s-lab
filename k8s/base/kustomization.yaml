@@ -5,6 +5,7 @@ resources:
   - postgres/secret.yaml
   - postgres/service.yaml
   - postgres/deployment.yaml
+  - postgres/cronjob.yaml
   - backend/configmap.yaml
   - backend/service.yaml
   - backend/deployment.yaml

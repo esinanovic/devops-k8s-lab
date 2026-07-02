@@ -1,0 +1,20 @@
+# Un job qui simule un backup Postgres toutes les heures
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: postgres-backup
+  namespace: devops-lab
+spec:
+  schedule: "0 * * * *"
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: backup
+            image: postgres:15-alpine
+            command: ["pg_dump", "--version"]
+          restartPolicy: OnFailure
+          
